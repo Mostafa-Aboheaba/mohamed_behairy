@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="صفحة تعزية وذكرى — رحمه الله وأسكنه فسيح جناته" />
+  <title>في ذكرى محمد البحيري — رحمه الله</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- خطوط عربية رسمية -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            memorial: {
+              deep: '#0f1c2e',
+              navy: '#1a2f4a',
+              slate: '#2d3f56',
+              mist: '#e8edf2',
+              pearl: '#f7f9fb',
+              gold: '#c4a35a',
+              goldLight: '#d4b87a',
+            },
+          },
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+</head>
+<body class="font-cairo bg-memorial-pearl text-memorial-deep antialiased">
+
+  <!-- شريط التنقل -->
+  <header
+    id="header"
+    class="fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-transparent"
+  >
+    <nav class="max-w-5xl mx-auto px-5 py-4 flex items-center justify-between">
+      <a href="#hero" class="font-cairo text-lg text-white/90 hover:text-memorial-gold transition-colors">
+        في ذكرى محمد البحيري
+      </a>
+      <button
+        id="menu-toggle"
+        class="md:hidden text-white/90 p-2"
+        aria-label="فتح القائمة"
+        aria-expanded="false"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>ß
+      <ul id="nav-links" class="hidden md:flex gap-8 text-sm text-white/80">
+        <li><a href="#biography" class="nav-link hover:text-memorial-gold transition-colors">السيرة</a></li>
+        <li><a href="#quran" class="nav-link hover:text-memorial-gold transition-colors">تلاوات من القرآن </a></li>
+        <li><a href="#condolences" class="nav-link hover:text-memorial-gold transition-colors">سجل التعازي</a></li>
+      </ul>
+    </nav>
+    <!-- قائمة الجوال -->
+    <div id="mobile-menu" class="hidden md:hidden bg-memorial-navy/95 backdrop-blur-sm border-t border-white/10">
+      <ul class="flex flex-col px-5 py-4 gap-4 text-white/90 text-sm">
+        <li><a href="#biography" class="mobile-nav-link block py-2">السيرة والذكريات</a></li>
+        <li><a href="#quran" class="mobile-nav-link block py-2">تلاوات من القرآن — صدقة جارية</a></li>
+        <li><a href="#condolences" class="mobile-nav-link block py-2">سجل التعازي</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══ قسم المقدمة ═══ -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 bg-memorial-deep">
+        <div class="absolute inset-0 bg-gradient-to-b from-memorial-navy/80 via-memorial-deep/90 to-memorial-deep"></div>
+        <div class="absolute inset-0 opacity-[0.03] noise-texture"></div>
+      </div>
+
+      <div class="relative z-10 max-w-5xl mx-auto px-5 py-32 text-center">
+        <!-- صورة الصديق — استبدل المسار بصورته -->
+        <div class="mb-10 flex justify-center">
+          <div class="photo-frame">
+            <img
+              src="assets/images/behairy.jpeg"
+              alt="صورة محمد البحيري — رحمه الله"
+              class="memorial-photo w-44 h-44 sm:w-52 sm:h-52 md:w-60 md:h-60 rounded-full object-cover object-center"
+            />
+          </div>
+        </div>
+
+        <p class="text-memorial-gold text-sm tracking-widest mb-4 opacity-90">
+          إِنَّا لِلَّهِ وَإِنَّا إِلَيْهِ رَاجِعُونَ
+        </p>
+
+        <h1 class="font-cairo text-4xl sm:text-5xl md:text-6xl text-white leading-tight mb-6">
+          محمد البحيري
+        </h1>
+
+        <p class="font-cairo text-xl sm:text-2xl text-white/70 italic max-w-2xl mx-auto leading-relaxed mb-8">
+          «اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ،
+          وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مَدْخَلَهُ»
+        </p>
+
+        <p class="text-white/50 text-sm max-w-lg mx-auto leading-loose">
+          هذه الصفحة وُضِعت لتخليد ذكراه الطيبة، ومشاركة ذكرياته الجميلة،
+          والدعاء له بالرحمة والمغفرة.
+        </p>
+
+        <a
+          href="#biography"
+          class="inline-block mt-12 text-memorial-gold/80 hover:text-memorial-gold transition-colors animate-bounce-subtle"
+          aria-label="انتقل إلى السيرة"
+        >
+          <svg class="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <!-- ═══ قسم السيرة والذكريات ═══ -->
+    <section id="biography" class="py-20 sm:py-28 bg-white">
+      <div class="max-w-3xl mx-auto px-5">
+        <div class="text-center mb-14">
+          <span class="text-memorial-gold text-sm tracking-widest">عن حياته</span>
+          <h2 class="font-cairo text-3xl sm:text-4xl text-memorial-deep mt-3">
+            السيرة والذكريات
+          </h2>
+          <div class="w-16 h-px bg-memorial-gold/50 mx-auto mt-6"></div>
+        </div>
+
+        <article class="prose-memorial space-y-6 text-memorial-slate leading-loose text-base sm:text-lg">
+          <!-- ✏️ عدّل النص أدناه حسب ما تريد -->
+          <p>
+            كان محمد البحيري — رحمه الله — من أهل الخير والبر، يُعرف بين معارفه
+            بأخلاقه الحسنة وابتسامته الدافئة. عاش حياته بتواضع وإخلاص، وترك
+            في قلوب من عرفوه أثراً لا يُمحى.
+          </p>
+          <p>
+            كان يحب مساعدة الآخرين دون أن ينتظر الشكر، ويُذكر دائماً بكلماته
+            الطيبة وصبره في الشدائد. كان قريباً من قلبه القرآن الكريم،
+            ويحرص على أداء الصلاة في وقتها.
+          </p>
+          <p>
+            نتذكره في التجمعات بضحكاته الهادئة، وفي مواقف الحياة بعقلانيته
+            وحكمته. كان أخاً وفياً، وصديقاً عزيزاً.
+          </p>
+        </article>
+
+        <!-- كلمات من الأحباء — carousel -->
+        <div class="mt-16 memories-carousel-wrap">
+          <p class="text-center text-memorial-gold text-sm tracking-widest mb-6">
+            كلمات من الأحباء
+          </p>
+
+          <p id="memories-empty" class="text-center text-memorial-slate/50 py-8">
+            كن أول من يكتب كلمة طيبة في سجل التعازي.
+          </p>
+
+          <div id="memories-carousel-host" class="hidden">
+            <div class="memories-carousel-viewport">
+              <div
+                id="memories-carousel"
+                class="memories-carousel"
+                aria-live="polite"
+                tabindex="0"
+              ></div>
+            </div>
+
+            <div class="carousel-controls">
+              <button type="button" id="carousel-prev" class="carousel-btn" aria-label="السابق">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+              <div id="carousel-dots" class="carousel-dots"></div>
+              <button type="button" id="carousel-next" class="carousel-btn" aria-label="التالي">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ قسم المصحف — صدقة جارية ═══ -->
+    <section id="quran" class="py-20 sm:py-28 bg-memorial-deep text-white">
+      <div class="max-w-3xl mx-auto px-5">
+        <div class="text-center mb-14">
+          <span class="text-memorial-gold text-sm tracking-widest">صدقة جارية</span>
+          <h2 class="font-cairo text-3xl sm:text-4xl mt-3">تلاوات من القرآن الكريم</h2>
+          <p class="text-white/50 mt-4 max-w-lg mx-auto leading-relaxed">
+            استمع إلى تلاوات من القرآن الكريم، وادعُ له بالرحمة والمغفرة.
+            كل آية تُسمَع صدقة جارية بإذن الله.
+          </p>
+          <div class="w-16 h-px bg-memorial-gold/50 mx-auto mt-6"></div>
+        </div>
+
+        <!-- مشغل الصوت -->
+        <div class="audio-player rounded-2xl bg-memorial-navy/60 border border-white/10 p-6 sm:p-8 backdrop-blur-sm">
+          <!-- معلومات التلاوة الحالية -->
+          <div class="text-center mb-6">
+            <p id="current-surah" class="font-cairo text-2xl text-memorial-goldLight">سورة الفاتحة</p>
+            <p id="current-reciter" class="text-white/40 text-sm mt-1">الشيخ مشاري العفاسي</p>
+            <p id="current-track-stats" class="track-stats track-stats--current mt-3"></p>
+          </div>
+
+          <!-- عناصر التحكم — اتجاه LTR مثل مشغّلات الصوت المعتادة -->
+          <div class="audio-controls" dir="ltr">
+            <div class="mb-6">
+              <input
+                type="range"
+                id="progress-bar"
+                class="progress-range w-full"
+                value="0"
+                min="0"
+                max="100"
+                aria-label="تقدم التلاوة"
+              />
+              <div class="flex justify-between text-xs text-white/40 mt-2">
+                <span id="current-time">0:00</span>
+                <span id="duration-time">0:00</span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-center gap-6 mb-8">
+              <button id="prev-btn" class="control-btn" aria-label="التلاوة السابقة">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z"/>
+                </svg>
+              </button>
+              <button id="play-btn" class="play-btn" aria-label="تشغيل / إيقاف">
+                <svg id="play-icon" class="w-7 h-7 play-icon-offset" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+                <svg id="pause-icon" class="w-7 h-7 hidden" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+                </svg>
+              </button>
+              <button id="next-btn" class="control-btn" aria-label="التلاوة التالية">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="text-center mb-8">
+              <button id="download-current-btn" type="button" class="download-btn" dir="rtl">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"/>
+                </svg>
+                تحميل التلاوة الحالية
+              </button>
+            </div>
+          </div>
+
+          <!-- قائمة السور -->
+          <div>
+            <p class="text-white/40 text-sm mb-3">اختر التلاوة أو حمّلها:</p>
+            <ul id="playlist" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+              <!-- يُملأ عبر JavaScript -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- زر طلب الدعاء -->
+        <div class="text-center mt-10">
+          <button id="prayer-btn" class="prayer-btn">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            ادعُ له بالرحمة
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══ قسم سجل التعازي ═══ -->
+    <section id="condolences" class="py-20 sm:py-28 bg-memorial-mist">
+      <div class="max-w-3xl mx-auto px-5">
+        <div class="text-center mb-14">
+          <span class="text-memorial-gold text-sm tracking-widest">كلمات من القلب</span>
+          <h2 class="font-cairo text-3xl sm:text-4xl text-memorial-deep mt-3">
+            سجل التعازي
+          </h2>
+          <p class="text-memorial-slate/70 mt-4 max-w-lg mx-auto leading-relaxed">
+            اكتب دعوة أو كلمة طيبة تُخلّد ذكراه. ستظهر كلمتك في قسم
+            <a href="#biography" class="text-memorial-gold hover:underline">السيرة والذكريات</a>.
+          </p>
+          <div class="w-16 h-px bg-memorial-gold/50 mx-auto mt-6"></div>
+        </div>
+
+        <!-- نموذج إضافة تعزية -->
+        <form id="condolence-form" class="bg-white rounded-2xl p-6 sm:p-8 shadow-sm border border-memorial-mist">
+          <div class="space-y-5">
+            <div>
+              <label for="visitor-name" class="block text-sm text-memorial-slate mb-2">اسمك</label>
+              <input
+                type="text"
+                id="visitor-name"
+                name="name"
+                required
+                maxlength="80"
+                placeholder="اكتب اسمك هنا"
+                class="form-input"
+              />
+            </div>
+            <div>
+              <label for="visitor-message" class="block text-sm text-memorial-slate mb-2">دعوتك أو كلمتك</label>
+              <textarea
+                id="visitor-message"
+                name="message"
+                required
+                maxlength="220"
+                rows="4"
+                placeholder="اللهم اغفر له وارحمه..."
+                class="form-input resize-none"
+              ></textarea>
+              <p class="text-xs text-memorial-slate/50 mt-2 text-left" dir="ltr">
+                <span id="char-count">0</span> / 220
+              </p>
+            </div>
+            <button type="submit" class="submit-btn w-full sm:w-auto">
+              إرسال التعزية
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- تذييل -->
+  <footer class="bg-memorial-deep text-white/40 text-center py-10 px-5 text-sm">
+    <p class="font-cairo text-white/60 text-lg mb-2">
+      اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ
+    </p>
+    <p>صفحة ذكرى — محمد البحيري</p>
+    <p class="mt-2 text-xs text-white/25">صُممت بمحبة وتقدير</p>
+  </footer>
+
+  <!-- نافذة الدعاء -->
+  <div id="prayer-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="prayer-title">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button id="close-prayer" class="modal-close" aria-label="إغلاق">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+      <h3 id="prayer-title" class="font-cairo text-2xl text-memorial-deep mb-6 text-center">
+        ادعُ له
+      </h3>
+      <div class="space-y-4 text-memorial-slate leading-loose text-base">
+        <p class="font-cairo text-lg text-center text-memorial-navy">
+          اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ،
+          وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مَدْخَلَهُ، وَاغْسِلْهُ بِالْمَاءِ
+          وَالثَّلْجِ وَالْبَرَدِ، وَنَقِّهِ مِنَ الْخَطَايَا كَمَا نَقَّيْتَ
+          الثَّوْبَ الأَبْيَضَ مِنَ الدَّنَسِ.
+        </p>
+        <p class="font-cairo text-lg text-center text-memorial-navy">
+          اللَّهُمَّ أَبْدِلْهُ دَاراً خَيْراً مِنْ دَارِهِ، وَأَهْلاً خَيْراً
+          مِنْ أَهْلِهِ، وَزَوْجاً خَيْراً مِنْ زَوْجِهِ، وَأَدْخِلْهُ
+          الْجَنَّةَ، وَأَعِذْهُ مِنْ عَذَابِ الْقَبْرِ وَعَذَابِ النَّارِ.
+        </p>
+      </div>
+      <button id="share-prayer" class="submit-btn w-full mt-8">
+        شارك دعاءك في سجل التعازي
+      </button>
+    </div>
+  </div>
+
+  <!-- رسالة نجاح -->
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <audio id="audio-element" preload="metadata"></audio>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/audio-stats.js"></script>
+  <script src="js/condolences.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
