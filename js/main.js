@@ -17,6 +17,13 @@ const PLAYLIST = [
     filename: 'ما-تيسر-من-سورة-الأنعام.mp3',
   },
   {
+    id: 'aljinn',
+    surah: 'ما تيسر من سورة الجن',
+    reciter: 'محمد أيمن البحيري',
+    url: 'assets/audio/سورة-الجن-20ـ28.mp3',
+    filename: 'سورة-الجن-20ـ28.mp3',
+  },
+  {
     id: 'fatiha',
     surah: 'سورة الفاتحة',
     reciter: 'الشيخ مشاري العفاسي',
