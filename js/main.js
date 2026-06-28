@@ -24,6 +24,20 @@ const PLAYLIST = [
     filename: 'سورة-الجن-20ـ28.mp3',
   },
   {
+    id: 'nouh',
+    surah: 'ما تيسر من سورة نوح',
+    reciter: 'محمد أيمن البحيري',
+    url: 'assets/audio/nouh_1_10.mp3',
+    filename: 'سورة-نوح-1-10.mp3',
+  },
+  {
+    id: 'alqalam',
+    surah: 'ما تيسر من سورة القلم',
+    reciter: 'محمد أيمن البحيري',
+    url: 'assets/audio/al-qalam_24_52.mp3',
+    filename: 'سورة-القلم.mp3',
+  },
+  {
     id: 'fatiha',
     surah: 'سورة الفاتحة',
     reciter: 'الشيخ مشاري العفاسي',
