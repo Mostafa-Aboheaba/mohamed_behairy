@@ -185,7 +185,10 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
-              <div id="carousel-dots" class="carousel-dots"></div>
+              <div class="carousel-pagination">
+                <span id="carousel-counter" class="carousel-counter hidden" aria-live="polite"></span>
+                <div id="carousel-dots" class="carousel-dots"></div>
+              </div>
               <button type="button" id="carousel-next" class="carousel-btn" aria-label="التالي">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
@@ -327,13 +330,13 @@
                 id="visitor-message"
                 name="message"
                 required
-                maxlength="220"
+                maxlength="400"
                 rows="4"
                 placeholder="اللهم اغفر له وارحمه..."
                 class="form-input resize-none"
               ></textarea>
               <p class="text-xs text-memorial-slate/50 mt-2 text-left" dir="ltr">
-                <span id="char-count">0</span> / 220
+                <span id="char-count">0</span> / 400
               </p>
             </div>
             <button type="submit" class="submit-btn w-full sm:w-auto">

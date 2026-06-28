@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS track_stats (
 CREATE TABLE IF NOT EXISTS condolences (
   id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name       TEXT NOT NULL CHECK (char_length(name) BETWEEN 1 AND 80),
-  message    TEXT NOT NULL CHECK (char_length(message) BETWEEN 1 AND 220),
+  message    TEXT NOT NULL CHECK (char_length(message) BETWEEN 1 AND 400),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   approved   BOOLEAN NOT NULL DEFAULT true
 );
@@ -82,7 +82,7 @@ CREATE POLICY "condolences_insert_public"
   WITH CHECK (
     approved = true
     AND char_length(name) BETWEEN 1 AND 80
-    AND char_length(message) BETWEEN 1 AND 220
+    AND char_length(message) BETWEEN 1 AND 400
   );
 
 -- فهرس للترتيب

@@ -110,7 +110,7 @@ html {
   box-sizing: border-box;
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  min-height: 13.5rem;
+  min-height: 18rem;
   display: flex;
   flex-direction: column;
   background: #ffffff;
@@ -155,7 +155,7 @@ html {
   text-align: center;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 8;
   -webkit-box-orient: vertical;
   padding: 0.5rem 0.5rem 0;
   margin-top: 0.5rem;
@@ -226,13 +226,27 @@ html {
   box-shadow: none;
 }
 
+.carousel-pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 4.5rem;
+}
+
+.carousel-counter {
+  font-size: 0.75rem;
+  color: #2d3f5699;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .carousel-dots {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  flex-wrap: wrap;
   justify-content: center;
-  max-width: 14rem;
 }
 
 .carousel-dot {
@@ -243,7 +257,7 @@ html {
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s, width 0.2s;
+  transition: background 0.2s, transform 0.2s, width 0.2s, opacity 0.2s;
 }
 
 .carousel-dot.active {
@@ -251,10 +265,24 @@ html {
   transform: scale(1.1);
   width: 1.25rem;
   border-radius: 9999px;
+  opacity: 1;
+}
+
+.carousel-dot.near {
+  background: #c4a35a88;
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+
+.carousel-dot.far {
+  background: #c4a35a44;
+  opacity: 0.4;
+  transform: scale(0.8);
 }
 
 .carousel-dot:hover:not(.active) {
-  background: #c4a35a88;
+  opacity: 0.85;
+  background: #c4a35a99;
 }
 
 @media (min-width: 640px) {
@@ -263,13 +291,13 @@ html {
   }
 
   .memory-slide {
-    min-height: 14rem;
+    min-height: 20rem;
     padding: 2.25rem 2rem 1.5rem;
   }
 
   .memory-slide__message {
     font-size: 1.0625rem;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 9;
   }
 }
 

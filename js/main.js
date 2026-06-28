@@ -376,7 +376,7 @@ document.addEventListener('keydown', (e) => {
 // ═══════════════════════════════════════════
 //  سجل التعازي + Carousel الذكريات
 // ═══════════════════════════════════════════
-const MESSAGE_MAX_LENGTH = 220;
+const MESSAGE_MAX_LENGTH = 400;
 
 const condolenceForm = document.getElementById('condolence-form');
 const visitorMessage = document.getElementById('visitor-message');
@@ -387,8 +387,13 @@ const memoriesEmpty = document.getElementById('memories-empty');
 const carouselPrev = document.getElementById('carousel-prev');
 const carouselNext = document.getElementById('carousel-next');
 const carouselDots = document.getElementById('carousel-dots');
+const carouselCounter = document.getElementById('carousel-counter');
 
 let carouselIndex = 0;
+let carouselTotal = 0;
+
+const CAROUSEL_SHOW_ALL_DOTS = 7;
+const CAROUSEL_WINDOW_SIZE = 3;
 
 function formatDate(iso) {
   return new Date(iso).toLocaleDateString('ar-EG', {
@@ -471,14 +476,56 @@ function observeCarouselSlides() {
 }
 
 function buildCarouselDots(count) {
-  carouselDots.innerHTML = Array.from({ length: count }, (_, i) => `
-    <button
-      type="button"
-      class="carousel-dot ${i === 0 ? 'active' : ''}"
-      data-index="${i}"
-      aria-label="تعزية ${i + 1}"
-    ></button>
-  `).join('');
+  carouselTotal = count;
+  renderCarouselPagination();
+}
+
+function getCarouselDotIndices() {
+  if (carouselTotal <= CAROUSEL_SHOW_ALL_DOTS) {
+    return Array.from({ length: carouselTotal }, (_, i) => i);
+  }
+
+  let start = carouselIndex - 1;
+  if (start < 0) start = 0;
+  if (start > carouselTotal - CAROUSEL_WINDOW_SIZE) {
+    start = carouselTotal - CAROUSEL_WINDOW_SIZE;
+  }
+
+  return Array.from({ length: CAROUSEL_WINDOW_SIZE }, (_, offset) => start + offset);
+}
+
+function getCarouselDotState(index) {
+  const distance = Math.abs(index - carouselIndex);
+  if (distance === 0) return 'active';
+  if (distance === 1) return 'near';
+  return 'far';
+}
+
+function renderCarouselPagination() {
+  if (carouselTotal <= 1) {
+    carouselCounter.classList.add('hidden');
+    carouselCounter.textContent = '';
+    carouselDots.innerHTML = '';
+    return;
+  }
+
+  carouselCounter.classList.remove('hidden');
+  carouselCounter.textContent = `${carouselIndex + 1} من ${carouselTotal}`;
+
+  const indices = getCarouselDotIndices();
+  carouselDots.innerHTML = indices
+    .map(
+      (index) => `
+      <button
+        type="button"
+        class="carousel-dot ${getCarouselDotState(index)}"
+        data-index="${index}"
+        aria-label="تعزية ${index + 1}"
+        ${index === carouselIndex ? 'aria-current="true"' : ''}
+      ></button>
+    `
+    )
+    .join('');
 
   carouselDots.querySelectorAll('.carousel-dot').forEach((dot) => {
     dot.addEventListener('click', () => {
@@ -502,14 +549,12 @@ function goToCarouselSlide(index, smooth = true) {
 
 function updateCarouselControls() {
   const slides = memoriesCarousel.querySelectorAll('.memory-slide');
-  const count = slides.length;
+  carouselTotal = slides.length;
 
   carouselPrev.disabled = carouselIndex <= 0;
-  carouselNext.disabled = carouselIndex >= count - 1;
+  carouselNext.disabled = carouselIndex >= carouselTotal - 1;
 
-  carouselDots.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-    dot.classList.toggle('active', i === carouselIndex);
-  });
+  renderCarouselPagination();
 }
 
 carouselPrev.addEventListener('click', () => goToCarouselSlide(carouselIndex - 1));
