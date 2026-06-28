@@ -85,6 +85,9 @@ const playIcon = document.getElementById('play-icon');
 const pauseIcon = document.getElementById('pause-icon');
 const prevBtn = document.getElementById('prev-btn');
 const nextBtn = document.getElementById('next-btn');
+const shuffleBtn = document.getElementById('shuffle-btn');
+const repeatBtn = document.getElementById('repeat-btn');
+const repeatOneBadge = document.getElementById('repeat-one-badge');
 const downloadCurrentBtn = document.getElementById('download-current-btn');
 const progressBar = document.getElementById('progress-bar');
 const currentTimeEl = document.getElementById('current-time');
@@ -97,6 +100,110 @@ const playlistEl = document.getElementById('playlist');
 let currentTrack = 0;
 let isPlaying = false;
 let playSessionCounted = false;
+let repeatMode = 'all';
+let shuffleOn = false;
+let shuffleOrder = [];
+let shufflePosition = 0;
+
+const REPEAT_LABELS = {
+  off: { label: 'إيقاف التكرار', title: 'إيقاف التكرار' },
+  all: { label: 'تكرار الكل', title: 'تكرار الكل' },
+  one: { label: 'تكرار المقطع الحالي', title: 'تكرار المقطع الحالي' },
+};
+
+function shuffleArray(array) {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function buildShuffleOrder({ keepCurrentFirst = false } = {}) {
+  shuffleOrder = shuffleArray(PLAYLIST.map((_, index) => index));
+
+  if (keepCurrentFirst) {
+    const currentPos = shuffleOrder.indexOf(currentTrack);
+    if (currentPos > 0) {
+      shuffleOrder.splice(currentPos, 1);
+      shuffleOrder.unshift(currentTrack);
+    }
+  }
+
+  shufflePosition = shuffleOrder.indexOf(currentTrack);
+  if (shufflePosition === -1) shufflePosition = 0;
+}
+
+function syncShufflePosition(index) {
+  if (!shuffleOn) return;
+  shufflePosition = shuffleOrder.indexOf(index);
+  if (shufflePosition === -1) {
+    buildShuffleOrder({ keepCurrentFirst: true });
+    shufflePosition = shuffleOrder.indexOf(index);
+  }
+}
+
+function getNextTrackIndex() {
+  if (shuffleOn) {
+    if (shufflePosition < shuffleOrder.length - 1) {
+      return shuffleOrder[shufflePosition + 1];
+    }
+    if (repeatMode === 'all') return shuffleOrder[0];
+    return null;
+  }
+
+  if (currentTrack < PLAYLIST.length - 1) return currentTrack + 1;
+  if (repeatMode === 'all') return 0;
+  return null;
+}
+
+function getPrevTrackIndex() {
+  if (shuffleOn) {
+    if (shufflePosition > 0) {
+      return shuffleOrder[shufflePosition - 1];
+    }
+    if (repeatMode === 'all') return shuffleOrder[shuffleOrder.length - 1];
+    return null;
+  }
+
+  if (currentTrack > 0) return currentTrack - 1;
+  if (repeatMode === 'all') return PLAYLIST.length - 1;
+  return null;
+}
+
+function applyRepeatMode() {
+  audio.loop = repeatMode === 'one';
+}
+
+function updateRepeatButtonUI() {
+  repeatBtn.classList.toggle('is-active', repeatMode !== 'off');
+  repeatOneBadge.classList.toggle('hidden', repeatMode !== 'one');
+
+  const { label, title } = REPEAT_LABELS[repeatMode];
+  repeatBtn.setAttribute('aria-label', label);
+  repeatBtn.title = title;
+}
+
+function updateShuffleButtonUI() {
+  shuffleBtn.classList.toggle('is-active', shuffleOn);
+  shuffleBtn.setAttribute('aria-pressed', String(shuffleOn));
+}
+
+function cycleRepeatMode() {
+  const modes = ['off', 'all', 'one'];
+  repeatMode = modes[(modes.indexOf(repeatMode) + 1) % modes.length];
+  applyRepeatMode();
+  updateRepeatButtonUI();
+  updateTransportButtons();
+}
+
+function toggleShuffle() {
+  shuffleOn = !shuffleOn;
+  if (shuffleOn) buildShuffleOrder({ keepCurrentFirst: true });
+  updateShuffleButtonUI();
+  updateTransportButtons();
+}
 
 function getTrackStats(index) {
   return AudioStats.getTrack(PLAYLIST[index].id);
@@ -221,9 +328,31 @@ function loadTrack(index, { autoplay = false } = {}) {
   progressBar.value = 0;
   currentTimeEl.textContent = '0:00';
   durationTimeEl.textContent = '0:00';
+  syncShufflePosition(index);
+  applyRepeatMode();
   updateCurrentTrackStats();
+  updateTransportButtons();
 
   if (autoplay) playAudio();
+}
+
+function updateTransportButtons() {
+  prevBtn.disabled = getPrevTrackIndex() === null;
+  nextBtn.disabled = getNextTrackIndex() === null;
+}
+
+function goToNextTrack() {
+  const next = getNextTrackIndex();
+  if (next === null) return;
+  if (shuffleOn) shufflePosition = shuffleOrder.indexOf(next);
+  loadTrack(next, { autoplay: true });
+}
+
+function goToPrevTrack() {
+  const prev = getPrevTrackIndex();
+  if (prev === null) return;
+  if (shuffleOn) shufflePosition = shuffleOrder.indexOf(prev);
+  loadTrack(prev, { autoplay: isPlaying });
 }
 
 function togglePlay() {
@@ -287,16 +416,11 @@ function buildPlaylist() {
 
 playBtn.addEventListener('click', togglePlay);
 downloadCurrentBtn.addEventListener('click', () => downloadTrack(currentTrack));
+shuffleBtn.addEventListener('click', toggleShuffle);
+repeatBtn.addEventListener('click', cycleRepeatMode);
 
-prevBtn.addEventListener('click', () => {
-  const prev = currentTrack > 0 ? currentTrack - 1 : PLAYLIST.length - 1;
-  loadTrack(prev, { autoplay: isPlaying });
-});
-
-nextBtn.addEventListener('click', () => {
-  const next = currentTrack < PLAYLIST.length - 1 ? currentTrack + 1 : 0;
-  loadTrack(next, { autoplay: isPlaying });
-});
+prevBtn.addEventListener('click', goToPrevTrack);
+nextBtn.addEventListener('click', goToNextTrack);
 
 audio.addEventListener('play', () => {
   updatePlayState(true);
@@ -330,11 +454,19 @@ audio.addEventListener('error', () => {
 });
 
 audio.addEventListener('ended', () => {
-  if (currentTrack < PLAYLIST.length - 1) {
-    loadTrack(currentTrack + 1, { autoplay: true });
-  } else {
-    updatePlayState(false);
+  if (repeatMode === 'one') return;
+
+  const next = getNextTrackIndex();
+  if (next !== null) {
+    if (shuffleOn) shufflePosition = shuffleOrder.indexOf(next);
+    loadTrack(next, { autoplay: true });
+    return;
   }
+
+  audio.currentTime = 0;
+  progressBar.value = 0;
+  currentTimeEl.textContent = '0:00';
+  updatePlayState(false);
 });
 
 async function initApp() {
@@ -345,6 +477,10 @@ async function initApp() {
         if (index !== -1) updateTrackStatsUI(index);
       });
       buildPlaylist();
+      buildShuffleOrder();
+      applyRepeatMode();
+      updateRepeatButtonUI();
+      updateShuffleButtonUI();
       loadTrack(0);
     }),
     Condolences.init(renderMemoriesCarousel),

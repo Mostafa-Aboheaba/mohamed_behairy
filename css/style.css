@@ -310,6 +310,63 @@ html {
   margin-left: 2px;
 }
 
+.player-transport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.player-transport-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.mode-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  color: #ffffff55;
+  flex-shrink: 0;
+  transition: color 0.2s, background 0.2s, transform 0.15s;
+}
+
+.mode-btn:hover {
+  color: #ffffffcc;
+  background: #ffffff0d;
+}
+
+.mode-btn.is-active {
+  color: #d4b87a;
+}
+
+.repeat-one-badge {
+  position: absolute;
+  right: 0.15rem;
+  bottom: 0.1rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #d4b87a;
+}
+
+@media (min-width: 640px) {
+  .player-transport {
+    gap: 1.25rem;
+  }
+
+  .mode-btn {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
 /* ─── مشغل الصوت ─── */
 .control-btn {
   display: flex;
@@ -322,9 +379,14 @@ html {
   transition: color 0.2s, background 0.2s;
 }
 
-.control-btn:hover {
+.control-btn:hover:not(:disabled) {
   color: #d4b87a;
   background: #ffffff0d;
+}
+
+.control-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
 .play-btn {
