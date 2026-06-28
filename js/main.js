@@ -10,6 +10,13 @@
 // ═══════════════════════════════════════════
 const PLAYLIST = [
   {
+    id: 'fatiha',
+    surah: 'سورة الفاتحة',
+    reciter: 'الشيخ مشاري العفاسي',
+    url: 'https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/1.mp3',
+    filename: 'سورة-الفاتحة.mp3',
+  },
+  {
     id: 'anam',
     surah: 'ما تيسر من سورة الأنعام',
     reciter: 'محمد البحيري',
@@ -17,18 +24,11 @@ const PLAYLIST = [
     filename: 'ما-تيسر-من-سورة-الأنعام.mp3',
   },
   {
-    id: 'aljinn',
-    surah: 'ما تيسر من سورة الجن',
+    id: 'al-mulk',
+    surah: 'ما تيسر من سورة الملك',
     reciter: 'محمد البحيري',
-    url: 'assets/audio/سورة-الجن-20ـ28.mp3',
-    filename: 'سورة-الجن-20ـ28.mp3',
-  },
-  {
-    id: 'nouh',
-    surah: 'ما تيسر من سورة نوح',
-    reciter: 'محمد البحيري',
-    url: 'assets/audio/nouh_1_10.mp3',
-    filename: 'سورة-نوح-1-10.mp3',
+    url: 'assets/audio/آيات-من-سورة-الملك.mp3',
+    filename: 'سورة-الملك.mp3',
   },
   {
     id: 'alqalam',
@@ -37,12 +37,20 @@ const PLAYLIST = [
     url: 'assets/audio/al-qalam_24_52.mp3',
     filename: 'سورة-القلم.mp3',
   },
+  
   {
-    id: 'fatiha',
-    surah: 'سورة الفاتحة',
-    reciter: 'الشيخ مشاري العفاسي',
-    url: 'https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/1.mp3',
-    filename: 'سورة-الفاتحة.mp3',
+    id: 'nouh',
+    surah: 'ما تيسر من سورة نوح',
+    reciter: 'محمد البحيري',
+    url: 'assets/audio/nouh_1_10.mp3',
+    filename: 'سورة-نوح-1-10.mp3',
+  },
+  {
+    id: 'aljinn',
+    surah: 'ما تيسر من سورة الجن',
+    reciter: 'محمد البحيري',
+    url: 'assets/audio/سورة-الجن-20ـ28.mp3',
+    filename: 'سورة-الجن-20ـ28.mp3',
   },
   {
     id: 'ikhlas',
@@ -64,14 +72,8 @@ const PLAYLIST = [
     reciter: 'الشيخ مشاري العفاسي',
     url: 'https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/114.mp3',
     filename: 'سورة-الناس.mp3',
-  },
-  {
-    id: 'yasin',
-    surah: 'سورة يس',
-    reciter: 'الشيخ مشاري العفاسي',
-    url: 'https://cdn.islamic.network/quran/audio-surah/128/ar.alafasy/36.mp3',
-    filename: 'سورة-يس.mp3',
-  },
+  }
+  
 ];
 
 // ═══════════════════════════════════════════
