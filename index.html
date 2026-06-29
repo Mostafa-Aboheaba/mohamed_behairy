@@ -29,10 +29,54 @@
   <meta name="twitter:image" content="https://mohamed-aymen-behairy.vercel.app/assets/images/og-image.jpeg" />
   <meta name="twitter:image:alt" content="محمد أيمن البحيري — رحمه الله" />
 
-  <!-- Sentry -->
+  <!-- Sentry — يُحمَّل أولاً؛ الإعداد قبل الـ Loader -->
+  <script>
+    window.SENTRY_RELEASE = { id: 'mohamed-behairy@1.0.0' };
+
+    window.sentryOnLoad = function () {
+      const isLocal =
+        location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+
+      Sentry.init({
+        environment: isLocal ? 'development' : 'production',
+        integrations: [
+          Sentry.browserTracingIntegration(),
+          Sentry.replayIntegration({
+            maskAllText: true,
+            blockAllMedia: true,
+          }),
+        ],
+        tracesSampleRate: isLocal ? 1.0 : 0.2,
+        tracePropagationTargets: [
+          'localhost',
+          /^https:\/\/.*\.supabase\.co/,
+        ],
+        replaysSessionSampleRate: isLocal ? 1.0 : 0.1,
+        replaysOnErrorSampleRate: 1.0,
+        dataCollection: {
+          userInfo: false,
+        },
+        ignoreErrors: [
+          'ResizeObserver loop limit exceeded',
+          /^Script error\.?$/,
+        ],
+        denyUrls: [
+          /extensions\//i,
+          /^chrome:\/\//i,
+          /^moz-extension:\/\//i,
+          /^safari-extension:\/\//i,
+        ],
+        beforeSend(event) {
+          if (event.request?.data) delete event.request.data;
+          return event;
+        },
+      });
+    };
+  </script>
   <script
     src="https://js.sentry-cdn.com/c6d8c563b7394e5aaeb4016638126f73.min.js"
     crossorigin="anonymous"
+    data-lazy="no"
   ></script>
 
   <!-- Tailwind CSS -->
@@ -188,8 +232,8 @@
           </p>
           <div class="mt-8 pt-8 border-t border-memorial-gold/30 text-center space-y-4">
             <p class="text-memorial-deep leading-loose">
-              توفي ليلة الخميس
-              <time datetime="2026-06-25">٢٥ يونيو ٢٠٢٦</time>
+              توفي
+              <time datetime="2026-06-24T08:30">٢٤ يونيو ٢٠٢٦ — الساعة ٨:٣٠</time>
               إثر حادث دراجة نارية مع رفيقه
               <span class="font-semibold text-memorial-navy">عمر محمود عبد الوهاب</span>
               — رحمهما الله.
@@ -465,6 +509,7 @@
 
   <audio id="audio-element" preload="metadata" loop="false"></audio>
 
+  <script src="js/error-reporting.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-config.js"></script>
   <script src="js/supabase-client.js"></script>

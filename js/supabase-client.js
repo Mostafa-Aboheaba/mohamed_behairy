@@ -14,12 +14,18 @@
     console.warn(
       '[Supabase] غير مُعدّ — انسخ js/supabase-config.example.js إلى js/supabase-config.js'
     );
+    ErrorReporting.captureMessage('Supabase not configured', 'warning', {
+      action: 'supabase_init',
+    });
     window.supabaseClient = null;
     return;
   }
 
   if (!window.supabase) {
     console.error('[Supabase] المكتبة غير محمّلة');
+    ErrorReporting.captureMessage('Supabase library not loaded', 'error', {
+      action: 'supabase_init',
+    });
     window.supabaseClient = null;
     return;
   }

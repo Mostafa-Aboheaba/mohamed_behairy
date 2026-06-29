@@ -32,6 +32,10 @@ const Condolences = {
 
     if (error) {
       console.error('[Condolences] load failed', error);
+      ErrorReporting.capture('condolence_load', error, {
+        code: error.code,
+        details: error.details,
+      });
       this.items = this._loadLocal();
       this._notify();
       return;
@@ -71,6 +75,12 @@ const Condolences = {
 
     if (error) {
       console.error('[Condolences] submit failed', error);
+      ErrorReporting.capture('condolence_submit', error, {
+        code: error.code,
+        details: error.details,
+        message_length: message.length,
+        anonymous: resolvedName === this.ANONYMOUS_NAME,
+      });
       return { ok: false, error };
     }
 

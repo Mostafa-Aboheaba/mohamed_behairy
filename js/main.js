@@ -288,7 +288,11 @@ async function downloadTrack(index) {
     URL.revokeObjectURL(blobUrl);
     incrementDownloadCount(index);
     showToast('تم بدء التحميل');
-  } catch {
+  } catch (err) {
+    ErrorReporting.capture('audio_download', err, {
+      track_id: track.id,
+      url: track.url,
+    });
     const link = document.createElement('a');
     link.href = track.url;
     link.download = filename;
@@ -303,7 +307,11 @@ async function downloadTrack(index) {
 }
 
 function playAudio() {
-  return audio.play().catch(() => {
+  return audio.play().catch((err) => {
+    ErrorReporting.capture('audio_play', err, {
+      track_id: PLAYLIST[currentTrack]?.id,
+      src: audio.src,
+    });
     showToast('تعذّر تشغيل الملف الصوتي');
     updatePlayState(false);
   });
@@ -449,6 +457,16 @@ progressBar.addEventListener('input', () => {
 });
 
 audio.addEventListener('error', () => {
+  const mediaError = audio.error;
+  ErrorReporting.capture(
+    'audio_load',
+    new Error(mediaError?.message || 'Media element error'),
+    {
+      track_id: PLAYLIST[currentTrack]?.id,
+      media_code: mediaError?.code,
+      src: audio.src,
+    }
+  );
   showToast('تعذّر تحميل الملف الصوتي');
   updatePlayState(false);
 });

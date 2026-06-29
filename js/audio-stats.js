@@ -26,6 +26,9 @@ const AudioStats = {
 
     if (error) {
       console.error('[AudioStats] load failed', error);
+      ErrorReporting.capture('audio_stats_load', error, {
+        code: error.code,
+      });
       this.cache = this._loadLocal();
       return this.cache;
     }
@@ -97,6 +100,11 @@ const AudioStats = {
 
     if (error) {
       console.error('[AudioStats] persist failed', error);
+      ErrorReporting.capture('audio_stats_persist', error, {
+        code: error.code,
+        event,
+        track_id: trackId,
+      });
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.cache));
     }
   },
