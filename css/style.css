@@ -779,6 +779,11 @@ html {
 }
 
 /* ─── الهيدر عند التمرير ─── */
+#quran,
+#audio-player {
+  scroll-margin-top: 5.5rem;
+}
+
 #header.scrolled {
   background: #0f1c2ef2;
   backdrop-filter: blur(8px);

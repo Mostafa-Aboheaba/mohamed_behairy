@@ -309,6 +309,32 @@ function stripLegacyTimeParam() {
   history.replaceState(null, '', url.toString());
 }
 
+function getHeaderOffset() {
+  return (document.getElementById('header')?.offsetHeight ?? 72) + 16;
+}
+
+function scrollToAudioPlayer({ behavior = 'auto' } = {}) {
+  const target =
+    document.getElementById('audio-player') || document.getElementById('quran');
+  if (!target) return;
+
+  const top =
+    target.getBoundingClientRect().top + window.scrollY - getHeaderOffset();
+  window.scrollTo({ top: Math.max(0, top), behavior });
+}
+
+function scrollToAudioPlayerWhenReady({ behavior = 'auto' } = {}) {
+  scrollToAudioPlayer({ behavior });
+  requestAnimationFrame(() => {
+    scrollToAudioPlayer({ behavior });
+    setTimeout(() => scrollToAudioPlayer({ behavior: 'auto' }), 150);
+  });
+}
+
+function shouldOpenAudioSection() {
+  return parseTrackDeepLink().hasDeepLink || window.location.hash === '#quran';
+}
+
 function getTrackShareText(index) {
   const track = PLAYLIST[index];
   return `استمع إلى ${track.surah} — ${track.reciter}\nفي ذكرى محمد البحيري — رحمه الله`;
@@ -670,6 +696,10 @@ audio.addEventListener('ended', () => {
 });
 
 async function initApp() {
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
   stripLegacyTimeParam();
   const deepLink = parseTrackDeepLink();
 
@@ -682,10 +712,6 @@ async function initApp() {
 
   if (deepLink.hasDeepLink) {
     normalizeBrowserTrackUrl(PLAYLIST[deepLink.index].id);
-    requestAnimationFrame(() => {
-      document.getElementById('quran')?.scrollIntoView({ behavior: 'smooth' });
-      showToast('اضغط تشغيل لبدء التلاوة');
-    });
   }
 
   await Promise.all([
@@ -699,6 +725,13 @@ async function initApp() {
     }),
     Condolences.init(renderMemoriesCarousel),
   ]);
+
+  if (shouldOpenAudioSection()) {
+    scrollToAudioPlayerWhenReady({ behavior: 'auto' });
+    if (deepLink.hasDeepLink) {
+      showToast('اضغط تشغيل لبدء التلاوة');
+    }
+  }
 }
 
 initApp();
