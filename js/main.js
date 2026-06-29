@@ -24,6 +24,13 @@ const PLAYLIST = [
     filename: 'ما-تيسر-من-سورة-الأنعام.mp3',
   },
   {
+    id: 'surat-al-mulk',
+    surah: 'سورة الملك',
+    reciter: 'محمد البحيري',
+    url: 'assets/audio/surat-al-Mulk.mp3',
+    filename: 'سورة-الملك-كاملة.mp3',
+  },
+  {
     id: 'al-mulk',
     surah: 'ما تيسر من سورة الملك',
     reciter: 'محمد البحيري',
