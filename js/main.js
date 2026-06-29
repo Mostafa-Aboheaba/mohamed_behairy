@@ -516,7 +516,7 @@ sharePrayer.addEventListener('click', () => {
   document.getElementById('visitor-message').value =
     'اللَّهُمَّ اغْفِرْ لَهُ وَارْحَمْهُ، وَعَافِهِ وَاعْفُ عَنْهُ، وَأَكْرِمْ نُزُلَهُ، وَوَسِّعْ مَدْخَلَهُ.';
   document.getElementById('condolences').scrollIntoView({ behavior: 'smooth' });
-  document.getElementById('visitor-name').focus();
+  visitorMessage.focus();
 });
 
 document.addEventListener('keydown', (e) => {
@@ -715,11 +715,11 @@ carouselNext.addEventListener('click', () => goToCarouselSlide(carouselIndex + 1
 condolenceForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const name = document.getElementById('visitor-name').value.trim();
+  const name = document.getElementById('visitor-name').value;
   const message = visitorMessage.value.trim();
   const submitBtn = condolenceForm.querySelector('[type="submit"]');
 
-  if (!name || !message) return;
+  if (!message) return;
   if (message.length > MESSAGE_MAX_LENGTH) {
     showToast(`الحد الأقصى ${MESSAGE_MAX_LENGTH} حرفاً`);
     return;

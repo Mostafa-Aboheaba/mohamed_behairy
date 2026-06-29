@@ -4,6 +4,7 @@
 const Condolences = {
   items: [],
   channel: null,
+  ANONYMOUS_NAME: 'زائر كريم',
 
   get isOnline() {
     return Boolean(window.supabaseClient);
@@ -45,10 +46,17 @@ const Condolences = {
     this._notify();
   },
 
+  resolveName(name) {
+    const trimmed = (name || '').trim();
+    return trimmed || this.ANONYMOUS_NAME;
+  },
+
   async submit(name, message) {
+    const resolvedName = this.resolveName(name);
+
     if (!this.isOnline) {
       const list = this._loadLocal();
-      list.push({ name, message, date: new Date().toISOString() });
+      list.push({ name: resolvedName, message, date: new Date().toISOString() });
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(list));
       this.items = list.slice().reverse();
       this._notify();
@@ -57,7 +65,7 @@ const Condolences = {
 
     const { data, error } = await window.supabaseClient
       .from('condolences')
-      .insert({ name, message })
+      .insert({ name: resolvedName, message })
       .select('id, name, message, created_at')
       .single();
 
