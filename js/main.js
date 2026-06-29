@@ -96,6 +96,7 @@ const shuffleBtn = document.getElementById('shuffle-btn');
 const repeatBtn = document.getElementById('repeat-btn');
 const repeatOneBadge = document.getElementById('repeat-one-badge');
 const downloadCurrentBtn = document.getElementById('download-current-btn');
+const shareCurrentBtn = document.getElementById('share-current-btn');
 const progressBar = document.getElementById('progress-bar');
 const currentTimeEl = document.getElementById('current-time');
 const durationTimeEl = document.getElementById('duration-time');
@@ -274,6 +275,140 @@ function getDownloadFilename(track) {
   return track.filename || `${track.surah.replace(/\s+/g, '-')}.mp3`;
 }
 
+function getTrackIndexById(trackId) {
+  return PLAYLIST.findIndex((track) => track.id === trackId);
+}
+
+function buildTrackShareUrl(index) {
+  const track = PLAYLIST[index];
+  const url = new URL(`${window.location.origin}${window.location.pathname}`);
+  url.searchParams.set('track', track.id);
+  url.searchParams.delete('t');
+  url.hash = 'quran';
+  return url.toString();
+}
+
+function normalizeBrowserTrackUrl(trackId) {
+  const url = new URL(`${window.location.origin}${window.location.pathname}`);
+  if (trackId) {
+    url.searchParams.set('track', trackId);
+  } else {
+    url.searchParams.delete('track');
+  }
+  url.searchParams.delete('t');
+  if (trackId) {
+    url.hash = 'quran';
+  }
+  history.replaceState(null, '', url.toString());
+}
+
+function stripLegacyTimeParam() {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has('t')) return;
+  url.searchParams.delete('t');
+  history.replaceState(null, '', url.toString());
+}
+
+function getTrackShareText(index) {
+  const track = PLAYLIST[index];
+  return `استمع إلى ${track.surah} — ${track.reciter}\nفي ذكرى محمد البحيري — رحمه الله`;
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.setAttribute('readonly', '');
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand('copy');
+  document.body.removeChild(textarea);
+}
+
+async function shareTrack(index) {
+  const track = PLAYLIST[index];
+  if (!track) return;
+
+  const url = buildTrackShareUrl(index);
+  const text = getTrackShareText(index);
+  const title = `${track.surah} — في ذكرى محمد البحيري`;
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, text, url });
+      showToast('تمت المشاركة');
+      return;
+    } catch (err) {
+      if (err?.name === 'AbortError') return;
+      ErrorReporting.capture('audio_share', err, {
+        track_id: track.id,
+      });
+    }
+  }
+
+  try {
+    await copyTextToClipboard(url);
+    showToast('تم نسخ رابط التلاوة');
+  } catch (err) {
+    ErrorReporting.capture('audio_share_copy', err, {
+      track_id: track.id,
+    });
+    showToast('تعذّر نسخ الرابط — حاول مرة أخرى');
+  }
+}
+
+function parseTrackDeepLink() {
+  const params = new URLSearchParams(window.location.search);
+  const trackId = params.get('track');
+  const index = trackId ? getTrackIndexById(trackId) : -1;
+
+  return {
+    index: index >= 0 ? index : 0,
+    hasDeepLink: index >= 0,
+  };
+}
+
+let isSeeking = false;
+let seekFallbackTimer = null;
+
+function getProgressTime() {
+  if (!audio.duration) return 0;
+  return (Number(progressBar.value) / 100) * audio.duration;
+}
+
+function previewSeek() {
+  if (!audio.duration) return;
+  isSeeking = true;
+  currentTimeEl.textContent = formatTime(getProgressTime());
+}
+
+function commitSeek() {
+  if (!audio.duration) {
+    isSeeking = false;
+    return;
+  }
+
+  const time = getProgressTime();
+  isSeeking = true;
+  audio.currentTime = time;
+  currentTimeEl.textContent = formatTime(time);
+
+  clearTimeout(seekFallbackTimer);
+  seekFallbackTimer = setTimeout(() => {
+    isSeeking = false;
+  }, 400);
+}
+
+function finishSeeking() {
+  commitSeek();
+}
+
 async function downloadTrack(index) {
   const track = PLAYLIST[index];
   const filename = getDownloadFilename(track);
@@ -315,6 +450,12 @@ async function downloadTrack(index) {
 
 function playAudio() {
   return audio.play().catch((err) => {
+    if (err?.name === 'NotAllowedError') {
+      showToast('اضغط تشغيل لبدء التلاوة');
+      updatePlayState(false);
+      return;
+    }
+
     ErrorReporting.capture('audio_play', err, {
       track_id: PLAYLIST[currentTrack]?.id,
       src: audio.src,
@@ -328,6 +469,7 @@ function loadTrack(index, { autoplay = false } = {}) {
   currentTrack = index;
   const track = PLAYLIST[index];
   playSessionCounted = false;
+  isSeeking = false;
 
   audio.pause();
   audio.src = track.url;
@@ -401,6 +543,18 @@ function buildPlaylist() {
       </button>
       <button
         type="button"
+        class="share-track-btn"
+        data-index="${i}"
+        aria-label="مشاركة ${track.surah}"
+        title="مشاركة"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+            d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+        </svg>
+      </button>
+      <button
+        type="button"
         class="download-track-btn"
         data-index="${i}"
         aria-label="تحميل ${track.surah}"
@@ -421,6 +575,13 @@ function buildPlaylist() {
     });
   });
 
+  playlistEl.querySelectorAll('.share-track-btn').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      shareTrack(parseInt(btn.dataset.index, 10));
+    });
+  });
+
   playlistEl.querySelectorAll('.download-track-btn').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -431,6 +592,7 @@ function buildPlaylist() {
 
 playBtn.addEventListener('click', togglePlay);
 downloadCurrentBtn.addEventListener('click', () => downloadTrack(currentTrack));
+shareCurrentBtn.addEventListener('click', () => shareTrack(currentTrack));
 shuffleBtn.addEventListener('click', toggleShuffle);
 repeatBtn.addEventListener('click', cycleRepeatMode);
 
@@ -450,18 +612,31 @@ audio.addEventListener('loadedmetadata', () => {
   durationTimeEl.textContent = formatTime(audio.duration);
 });
 
-audio.addEventListener('timeupdate', () => {
-  currentTimeEl.textContent = formatTime(audio.currentTime);
+audio.addEventListener('seeked', () => {
+  clearTimeout(seekFallbackTimer);
+  isSeeking = false;
   if (audio.duration) {
     progressBar.value = (audio.currentTime / audio.duration) * 100;
+    currentTimeEl.textContent = formatTime(audio.currentTime);
   }
 });
 
-progressBar.addEventListener('input', () => {
-  if (audio.duration) {
-    audio.currentTime = (progressBar.value / 100) * audio.duration;
+audio.addEventListener('timeupdate', () => {
+  if (!isSeeking) {
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+    if (audio.duration) {
+      progressBar.value = (audio.currentTime / audio.duration) * 100;
+    }
   }
 });
+
+progressBar.addEventListener('pointerdown', () => {
+  isSeeking = true;
+});
+
+progressBar.addEventListener('input', previewSeek);
+progressBar.addEventListener('change', finishSeeking);
+progressBar.addEventListener('pointerup', finishSeeking);
 
 audio.addEventListener('error', () => {
   const mediaError = audio.error;
@@ -495,6 +670,8 @@ audio.addEventListener('ended', () => {
 });
 
 async function initApp() {
+  stripLegacyTimeParam();
+
   await Promise.all([
     AudioStats.init().then(() => {
       AudioStats.onUpdate((trackId) => {
@@ -506,7 +683,17 @@ async function initApp() {
       applyRepeatMode();
       updateRepeatButtonUI();
       updateShuffleButtonUI();
-      loadTrack(0);
+
+      const deepLink = parseTrackDeepLink();
+      loadTrack(deepLink.index);
+
+      if (deepLink.hasDeepLink) {
+        normalizeBrowserTrackUrl(PLAYLIST[deepLink.index].id);
+        requestAnimationFrame(() => {
+          document.getElementById('quran')?.scrollIntoView({ behavior: 'smooth' });
+          showToast('اضغط تشغيل لبدء التلاوة');
+        });
+      }
     }),
     Condolences.init(renderMemoriesCarousel),
   ]);

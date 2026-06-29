@@ -514,7 +514,16 @@ html {
   margin-right: auto;
 }
 
-.download-btn {
+.player-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.download-btn,
+.share-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -526,13 +535,15 @@ html {
   transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
-.download-btn:hover {
+.download-btn:hover,
+.share-btn:hover {
   background: #ffffff0d;
   border-color: #c4a35a66;
   color: #d4b87a;
 }
 
-.download-track-btn {
+.download-track-btn,
+.share-track-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -544,7 +555,8 @@ html {
   transition: background 0.2s, color 0.2s;
 }
 
-.download-track-btn:hover {
+.download-track-btn:hover,
+.share-track-btn:hover {
   background: #ffffff12;
   color: #d4b87a;
 }
