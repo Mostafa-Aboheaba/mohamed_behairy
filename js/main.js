@@ -526,11 +526,11 @@ function updatePlayState(playing) {
   pauseIcon.classList.toggle('hidden', !playing);
 }
 
-function buildPlaylist() {
+function buildPlaylist(activeIndex = currentTrack) {
   playlistEl.innerHTML = PLAYLIST.map((track, i) => {
     const { plays, downloads } = getTrackStats(i);
     return `
-    <li class="playlist-item ${i === 0 ? 'active' : ''}" data-index="${i}">
+    <li class="playlist-item ${i === activeIndex ? 'active' : ''}" data-index="${i}">
       <button type="button" class="playlist-play" data-index="${i}" aria-label="تشغيل ${track.surah}">
         <span class="playlist-main">
           <span class="playlist-row">
@@ -671,6 +671,22 @@ audio.addEventListener('ended', () => {
 
 async function initApp() {
   stripLegacyTimeParam();
+  const deepLink = parseTrackDeepLink();
+
+  buildPlaylist(deepLink.index);
+  buildShuffleOrder();
+  applyRepeatMode();
+  updateRepeatButtonUI();
+  updateShuffleButtonUI();
+  loadTrack(deepLink.index);
+
+  if (deepLink.hasDeepLink) {
+    normalizeBrowserTrackUrl(PLAYLIST[deepLink.index].id);
+    requestAnimationFrame(() => {
+      document.getElementById('quran')?.scrollIntoView({ behavior: 'smooth' });
+      showToast('اضغط تشغيل لبدء التلاوة');
+    });
+  }
 
   await Promise.all([
     AudioStats.init().then(() => {
@@ -678,22 +694,8 @@ async function initApp() {
         const index = PLAYLIST.findIndex((track) => track.id === trackId);
         if (index !== -1) updateTrackStatsUI(index);
       });
-      buildPlaylist();
-      buildShuffleOrder();
-      applyRepeatMode();
-      updateRepeatButtonUI();
-      updateShuffleButtonUI();
-
-      const deepLink = parseTrackDeepLink();
-      loadTrack(deepLink.index);
-
-      if (deepLink.hasDeepLink) {
-        normalizeBrowserTrackUrl(PLAYLIST[deepLink.index].id);
-        requestAnimationFrame(() => {
-          document.getElementById('quran')?.scrollIntoView({ behavior: 'smooth' });
-          showToast('اضغط تشغيل لبدء التلاوة');
-        });
-      }
+      buildPlaylist(currentTrack);
+      updateCurrentTrackStats();
     }),
     Condolences.init(renderMemoriesCarousel),
   ]);
