@@ -573,10 +573,12 @@ const CAROUSEL_SHOW_ALL_DOTS = 7;
 const CAROUSEL_WINDOW_SIZE = 3;
 
 function formatDate(iso) {
-  return new Date(iso).toLocaleDateString('ar-EG', {
+  return new Date(iso).toLocaleString('ar-EG', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   });
 }
 
